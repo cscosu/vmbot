@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { Client, Intents } = require('discord.js');
+const { token, clientID } = require('./config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES] });
 const args = process.argv.slice(2);
@@ -58,4 +59,4 @@ var reserved = [];
 
 available = loadLogins(loc);
 console.log(`Loaded ${available.length} accounts`);
-client.login(process.env.TOKEN);
+client.login(token);

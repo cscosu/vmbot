@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/cscosu/vmbot/issues"
   },
-  "homepage": "https://github.com/cscosu/vmbot#readme"
+  "homepage": "https://github.com/cscosu/vmbot#readme",
+  "dependencies": {
+    "@discordjs/rest": "^0.3.0",
+    "discord-api-types": "^0.27.1",
+    "discord.js": "^13.6.0"
+  }
 }

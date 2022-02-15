@@ -1,6 +1,8 @@
 const fs = require("fs");
+const { Client, Intents } = require('discord.js');
 
-const ARGS = process.argv.slice(2);
+const client = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES] });
+const args = process.argv.slice(2);
 
 function loadLogins(filename) {
     var buffer = fs.readFileSync(filename, {encoding: 'utf-8'});
@@ -46,9 +48,14 @@ function releaseAccount(accountID) {
     console.log(`[WARN] Account with ID ${accountID} is not reserved`);
 }
 
-var loc = ARGS[0] != undefined ? ARGS[0] : "logins.txt";
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}`);
+});
+
+var loc = args[0] != undefined ? args[0] : "logins.txt";
 var available = [];
 var reserved = [];
 
 available = loadLogins(loc);
 console.log(`Loaded ${available.length} accounts`);
+client.login(process.env.TOKEN);

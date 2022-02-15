@@ -26,6 +26,10 @@ function parseLogin(str) {
 }
 
 function reserveAccount() {
+    if (available.length < 1) {
+        console.log(`[WARN] No VMs available!`);
+        return null;
+    }
     var account = available.shift();
     reserved.push(account);
     return account;
@@ -72,16 +76,22 @@ async function handleCommand(interaction) {
 
         if (users[interaction.user.id] == undefined) {
             var details = reserveAccount();
-            users[interaction.user.id] = details.id;
-            var str = `I reserved you a VM on https://vm.pwn.osucyber.club/\n`
-                + `Username: \`${details.username}\`\n`
-                + `Password: \`${details.password}\`\n`
-                + `Let me know when you're done with it!`;
-            var message = {
-                content: str,
-                components: [row]
-            };
-            console.log(`[INFO] Assigned VM ${details.id} to client ${interaction.user.id} (${interaction.user.tag})`);
+            if (details != null) {
+                users[interaction.user.id] = details.id;
+                var str = `I reserved you a VM on https://vm.pwn.osucyber.club/\n`
+                    + `Username: \`${details.username}\`\n`
+                    + `Password: \`${details.password}\`\n`
+                    + `Let me know when you're done with it!`;
+                var message = {
+                    content: str,
+                    components: [row]
+                };
+                console.log(`[INFO] Assigned VM ${details.id} to client ${interaction.user.id} (${interaction.user.tag})`);
+            } else {
+                var message = "Sorry, all VMs are currently in use.\n"
+                    + "Please try again later!";
+            }
+
         } else {
             var message = "You already have a VM!";
         }
@@ -101,9 +111,9 @@ async function handleCommand(interaction) {
 
 async function handleButton(interaction) {
     const { customId } = interaction;
-    if(customId === 'release') {
+    if (customId === 'release') {
         var vmID = users[interaction.user.id];
-        if(vmID != undefined) {
+        if (vmID != undefined) {
             delete users[interaction.user.id];
             releaseAccount(vmID);
             console.log(`[INFO] Released VM ${vmID} from client ${interaction.user.id} (${interaction.user.tag})`);

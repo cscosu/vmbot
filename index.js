@@ -54,8 +54,11 @@ client.on('ready', () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
+    if (interaction.isCommand()) handleCommand(interaction);
+    if (interaction.isButton()) handleButton(interaction);
+});
 
+async function handleCommand(interaction) {
     const { commandName } = interaction;
 
     if (commandName === 'vm') {
@@ -94,7 +97,22 @@ client.on('interactionCreate', async interaction => {
             interaction.reply("Check your DMs!");
         }
     }
-});
+}
+
+async function handleButton(interaction) {
+    const { customId } = interaction;
+    if(customId === 'release') {
+        var vmID = users[interaction.user.id];
+        if(vmID != undefined) {
+            delete users[interaction.user.id];
+            releaseAccount(vmID);
+            console.log(`[INFO] Released VM ${vmID} from client ${interaction.user.id} (${interaction.user.tag})`);
+            interaction.update({ content: "Thank you!", components: [] });
+        } else {
+            console.log(`[WARN] No VM assigned to client ${interaction.user.id} (${interaction.user.tag}), can't release`);
+        }
+    }
+}
 
 var loc = args[0] != undefined ? args[0] : "logins.txt";
 var available = [];

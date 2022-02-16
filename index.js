@@ -5,6 +5,10 @@ const { token } = require('./config.json');
 const client = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES] });
 const args = process.argv.slice(2);
 
+function canRelease() {
+    return args.includes('-r');
+}
+
 function loadLogins(filename) {
     var buffer = fs.readFileSync(filename, { encoding: 'utf-8' });
     var entries = buffer.split('\n').map(i => parseLogin(i)).filter(j => j != null);
@@ -81,15 +85,15 @@ async function handleCommand(interaction) {
                 var str = `I reserved you a VM on https://vm.pwn.osucyber.club/\n`
                     + `Username: \`${details.username}\`\n`
                     + `Password: \`${details.password}\`\n`
-                    + `Let me know when you're done with it!`;
+                    + (canRelease() ? `Let me know when you're done with it!` : ``);
                 var message = {
                     content: str,
-                    components: [row]
+                    components: canRelease() ? [row] : []
                 };
                 console.log(`[INFO] Assigned VM ${details.id} to client ${interaction.user.id} (${interaction.user.tag})`);
             } else {
-                var message = "Sorry, all VMs are currently in use.\n"
-                    + "Please try again later!";
+                var message = "Sorry, all VMs are currently in use.\n";
+                    + (canRelease() ? "Please try again later!" : "");
             }
 
         } else {
@@ -110,6 +114,11 @@ async function handleCommand(interaction) {
 }
 
 async function handleButton(interaction) {
+    if(!canRelease()) {
+        console.log(`[WARN] Received release request from client ${interaction.user.id} (${interaction.user.tag}), but VMs are non-releasable`);
+        return;
+    }
+
     const { customId } = interaction;
     if (customId === 'release') {
         var vmID = users[interaction.user.id];

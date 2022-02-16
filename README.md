@@ -1,5 +1,5 @@
 # vmbot
-Discord bot that hands out VM credentials
+Discord bot that hands out VM credentials for CSC events (CTFs, workshops, etc)
 
 ## Usage
 Upon VERY FIRST USE, you can globally register the /vm command with:

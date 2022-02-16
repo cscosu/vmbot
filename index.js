@@ -3,10 +3,9 @@ const { Client, Intents, MessageActionRow, MessageButton } = require('discord.js
 const { token } = require('./config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES] });
-const args = process.argv.slice(2);
 
 function canRelease() {
-    return args.includes('-r');
+    return flags.includes('-r');
 }
 
 function loadLogins(filename) {
@@ -133,6 +132,10 @@ async function handleButton(interaction) {
     }
 }
 
+var args = process.argv.slice(2);
+var flags = args.filter(arg => (arg.startsWith("-") || arg.startsWith("--")));
+args = args.filter(arg => !(arg.startsWith("-") || arg.startsWith("--")));
+
 var loc = args[0] != undefined ? args[0] : "logins.txt";
 var available = [];
 var reserved = [];
@@ -140,4 +143,5 @@ var users = {};
 
 available = loadLogins(loc);
 console.log(`[INIT] Loaded ${available.length} accounts`);
+canRelease() && console.log(`[WARN] Ran with -r, VMs are releasable`);
 client.login(token);

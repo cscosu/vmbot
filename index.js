@@ -1,6 +1,5 @@
 const fs = require("fs");
 const { Client, Intents, MessageActionRow, MessageButton } = require('discord.js');
-const { token } = require('./config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.DIRECT_MESSAGES] });
 
@@ -144,4 +143,4 @@ var users = {};
 available = loadLogins(loc);
 console.log(`[INIT] Loaded ${available.length} accounts`);
 canRelease() && console.log(`[WARN] Ran with -r, VMs are releasable`);
-client.login(token);
+client.login(process.env.BOT_TOKEN);

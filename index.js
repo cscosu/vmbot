@@ -15,14 +15,14 @@ function loadLogins(filename) {
 
 function parseLogin(str) {
     str = str.split(":");
-    if (str.length < 5) return null;
+    if (str.length < 2) return null;
 
     var account = {
         id: str[0],
-        address: str[1],
-        username: str[2],
-        password: str[3],
-        key: str[4]
+	//address: str[1],
+        username: str[0],
+        password: str[1],
+        //key: str[4]
     }
     return account;
 }
